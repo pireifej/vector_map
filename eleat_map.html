@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ELEAT Vector Maps></title>
+
+		<link rel="stylesheet" href="/eleat/jquery-jvectormap-1.2.2.css">
+		<link rel="stylesheet" href="/eleat/jquery-ui-1.10.0.custom.min.css">
+		<link rel="stylesheet" href="/eleat/eleatmenu.css">
+
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	</head>
+	<body>
+
+	<h2 align='center'>
+		ELEAT Vector Maps
+		<span style="color:#004500;">T</span><span style="color:#307f00;">race</span>
+		<span style="color:#004500;">A</span><span style="color:#307f00;">ctivation</span>
+		<span style="color:#004500;">P</span><span style="color:#307f00;">rovisioning</span>
+		<span style="color:#004500;">S</span><span style="color:#307f00;">cheduling</span>
+		&
+		<span style="color:#004500;">S</span><span style="color:#307f00;">ystem</span>
+	</h2>
+		
+	<table border = '1'>
+		<tr>
+
+		<td><div id="world-map" style="width: 600px; height: 600px;"></div></td>
+
+		<td id='tapss'>
+			<label for="target_class" style="display: inline-block;vertical-align: top;">Target Class</label>
+			<select name="target_class_value" id="target_class" style="display: inline-block;vertical-align: top;" onchange="update_target_class()">
+				<option value="IP">IP</option>
+				<option value="landline">Landline</option>
+				<option value="mobility" selected="selected">Mobility</option>
+			</select><br>
+		<fieldset style="background-color:#efefff;border-style:groove;">
+			<legend accesskey=I style="font-size:8pt;color:#909000;font-family:Times;">Surveillance Identifiers</legend>
+				<table border=0 cellpadding=1 cellspacing=1>
+				<tr>
+				<td align=right nowrap>
+					<label for="itn">ITN</label>
+					<input type="text" name="itn_value" id="itn" value="667">
+				</td>
+				<td align=left nowrap>
+					<label for="target_value" style="display: inline-block; width: 110px; text-align: left;" align=right>Target Value</label>
+					<input type="text" align=right name="target_value_value" id="target_value" value="9736101066" onkeydown="update_target_type()" onkeyup="update_target_type()" onchange="validate_target_value()">
+				</td>
+				</tr>
+				<tr>
+				<td align=right nowrap>
+					<label for="case_ID">Case ID</label>
+					<input type="text" name="case_ID_value" id="case_ID" value="123123">
+				</td>
+				<td align=left nowrap>
+					<label for="min" style="display: inline-block; width: 110px; text-align: left;" align=right>MIN/IMSI</label>
+					<input type="text" name="min_value" id="min" value="310410346902210">
+				</td>
+				</tr>
+				<tr>
+				<td align=right nowrap>
+					<label for="CFID">LEA CFID</label>
+					<input type="text" name="CFID_value" id="CFID" value="5">
+				</td>
+				<td align=left nowrap>
+					<label for="min" style="display: inline-block; width: 110px; text-align: left;" align=right>ESN/IMEI</label>
+					<input type="text" name="esn_value" id="esn" value="ESN">
+				</td>
+				</tr>
+				</table>
+		</fieldset>
+
+		<fieldset style="background-color:#efefff;border-style:groove;">
+			<legend accesskey=I style="font-size:8pt;color:#909000;font-family:Times;">Surveillance Nodes</legend>
+			<table border=0 cellpadding=1 cellspacing=1>
+				<label for="node_groups" style="display: inline-block; vertical-align: top;">Node Groups</label>
+				<select multiple name="node_groups_value" id="node_groups" onchange="update_node_IDs()" size=10 style="display: inline-block;vertical-align: top;"></select>
+				<label for="node_IDs" style="display:inline-block; vertical-align:top;">Node IDs</label>
+				<select multiple name="node_IDs_value" id="node_IDs" onchange="update_node_info()" style="display: inline-block;vertical-align: top;" size=10></select>
+				<label for="node_names" style="display: inline-block;vertical-align: top;">Node Name</label>
+				<select multiple name="node_names_value" id="node_names" style="display: inline-block;vertical-align: top;" size=10></select>
+			</table>
+
+			<label for="AF_name">AF Name</label>
+			<input type="text" name="AF_name_value" id="AF_name"><br>
+
+			<label for="HLR_names" style="display: inline-block;vertical-align: top;">HLR Name</label>
+			<select multiple name="HLR_name_value" id="HLR_names" style="display: inline-block;vertical-align: top;"></select><br>
+
+			<label for="voicemail_server" style="display: inline-block;vertical-align: top;">Voicemail Server</label>
+			<select name="voicemail_server_value" id="voicemail_server" style="display: inline-block;vertical-align: top;">
+				<option>Select a VM Server</option>
+			</select><br>
+
+		</fieldset>
+
+		<fieldset style="background-color:#efefff;border-style:groove;">
+			<legend accesskey=I style="font-size:8pt;color:#909000;font-family:Times;">Surveillance Dates</legend>
+			<label for="start_date_time">Start Date/Time (Local Switch)</label>
+			<input type="text" id="start_date" size="10" onchange="update_end_date()"/>
+			<input type="text" id="start_time" size="8"/>
+			<input type="checkbox" id="immediate" checked="checked"/><label for="immediate">Activate Immediately</label><br>
+			<label for="end_date_time">End Date/Time (Local Switch)</label>
+			<input type="text" id="end_date" size="10" onchange="update_start_date()"/>
+			<input type="text" id="end_time" size="8"/>
+			<label for="duration" id="duration_label">Duration</label><input type="text" id="duration" size="4" onkeydown="update_end_date()" onkeyup="update_end_date()" onchange="update_end_date()"/><label for="duration" id="days_label">Days</label>
+		</fieldset>
+
+		<fieldset style="background-color:#efefff;border-style:groove;">
+			<legend accesskey=I style="font-size:8pt;color:#909000;font-family:Times;">Surveillance Options</legend>
+				<label for="mobile_locator" style="display: inline-block; width: 110px; text-align: left;">Mobile Locator</label>
+				<input type="radio" name="mobile_locator_value" id="mobile_locator" value="no">No
+				<input type="radio" name="mobile_locator_value" id="mobile_locator" value="yes">Yes
+				<input type="text" align=right name="LEA_email_value" id="LEA_email"><br>
+				<label for="DDE_authorized" style="display: inline-block; width: 110px; text-align: left;">DDE Authorized</label>
+				<input type="radio" name="DDE_authorized_value" id="DDE_authorized" value="no">No
+				<input type="radio" name="DDE_authorized_value" id="DDE_authorized" value="yes">Yes<br>
+				<label for="SMS_type" style="display: inline-block; width: 110px; text-align: left;">SMS Type</label>
+				<input type="radio" name="SMS_type_value" id="SMS_type" value="none">None
+				<input type="radio" name="SMS_type_value" id="SMS_type" value="messages">Messages
+				<input type="radio" name="SMS_type_value" id="SMS_type" value="messages_content">Messages+Content<br>
+				<label for="trace_type" style="display: inline-block; width: 110px; text-align: left;">Trace Type</label>
+				<input type="radio" name="trace_type_value" id="trace_type" value="none">None
+				<input type="radio" name="trace_type_value" id="trace_type" value="data_location">Data+Location
+				<input type="radio" name="trace_type_value" id="trace_type" value="content">Content
+				<input type="radio" name="trace_type_value" id="trace_type" value="content_location">Content+Location<br>
+				<label for="LEA_CNUMs" style="display: inline-block; width: 110px; text-align: left;">LEA CNUMs</label>
+				<input type="text" align=right name="LEA_CNUMs_value" id="LEA_CNUMs">
+				<span style="font-size:8pt;color:#505000">(For GSM:&nbsp; 3.1kHz+Speech+UDI+Dual+Fax)</span><br>
+				<label for="GPRS_services" style="display: inline-block; width: 110px; text-align: left;">GPRS Services</label><input type="checkbox" id="GPRS_services" checked="checked" disabled="disabled"/>
+		</fieldset>
+
+		<button type="button" id="submit" class="large light">Submit Activation</button><br>
+
+		</td>
+		</tr>
+	</table>
+
+	<input type="checkbox" id="filter_by_ITN" onchange="apply_filter()"/><label for="filter_by_ITN"/>Filter by ITN</label>
+	<input type="text" id="ITN_filter" size="4" onkeydown="ensure_filter_checked(); apply_filter();" onkeyup="ensure_filter_checked(); apply_filter();"/><br>
+	<button type="button" id="exception_reporting" class="large light">Run Exception Reporting</button><br>
+	<br><label id='scheduler_log'> (empty) </label><br>
+	<input type="text" id="nelos_min" class="large light">
+	<button type="button" id="nelos" class="large light">Track MIN</button><br><br>
+	<button type="button" id="auto_refresh_on" class="large light" style="float: right;">Auto Refresh ON</button>
+	<button type="button" id="auto_refresh_off" class="large light" style="float: right;">Auto Refresh OFF</button><br>
+
+	<script type="text/javascript" src="/eleat/validate.js"></script>
+
+	<script type="text/javascript" src="/eleat/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/eleat/jquery-ui-1.10.0.custom.min.js"></script>
+
+	<script type="text/javascript" src="/eleat/eleat_map.js"></script>
+
+	<script type="text/javascript" src="/eleat/jquery-jvectormap-1.2.2.min.js" ></script>
+	<script type="text/javascript" src="/eleat/jquery-jvectormap-us-aea-en.js" ></script>
+	<script type="text/javascript" src="/eleat/jquery-jvectormap-world-mill-en.js" ></script>
+
+	<div id="dialog"></div>
+
+	</body>
+</html>

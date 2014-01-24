@@ -1,0 +1,58 @@
+body {
+scrollbar-arrow-color: #0f0e0f;
+scrollbar-3dlight-color: #555555;
+scrollbar-highlight-color: #ffccff;
+scrollbar-face-color: #9999dd;
+scrollbar-shadow-color: #191919;
+scrollbar-track-color: #ccccff;
+scrollbar-darkshadow-color: #191919
+}
+
+#eleatmenu {
+top: 60px;
+background-repeat: repeat-y;
+margin: 0px;
+left: 0px; 
+width: 160px;
+font-family: Tahoma, Arial, Geneva;
+font-size: 9px;
+font-weight: bold;
+color: #B9E9B9;
+text-decoration: none;
+}
+
+#eleatmenu A {
+font-family: Tahoma, Arial, Geneva;  
+font-size: 9px; 
+color: #D9D9D9; 
+text-decoration: none;
+font-weight: normal;
+background-image: url(/images/pointer_off3.gif);
+background-repeat: no-repeat;
+padding-left: 13px;
+}
+
+#eleatmenu A:hover {
+color: #FFFF5F; 
+background-image: url(/images/pointer_on3.gif);
+font-weight:bold;
+background-repeat: no-repeat;
+}
+
+#eleatmenud {
+background-repeat: no-repeat;
+padding-left: 4px;
+padding-top: 2px;
+margin-top: 4px;
+margin-bottom: 2px;
+height: 17px;
+font-family: Tahoma, Arial, Helvetica; 
+font-size: 9px; 
+color:#FFFFFF; 
+font-weight: bold; 
+text-decoration: none;
+}
+
+.ui-menu { 
+width: 150px;
+}
