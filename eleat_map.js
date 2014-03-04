@@ -134,8 +134,51 @@ function exception_reporting_response(data) {
 		var ajax_data = {
 			command_name : "run_exception_reporting"
 		};
-		send_ajax_wrapper(ajax_data, "");
+		send_ajax_wrapper(ajax_data, "display_exception_reports");
 	}
+}
+
+function display_exception_reports(data) {
+	var table1 = get_table_HTML(data[0], "Node Summary Report");
+	var table2 = get_table_HTML(data[1], "Node Detail Report");
+	display_new_modal(table1 + "<br><br>" + table2, "Exception Report");
+}
+
+function get_table_HTML(data, title) {
+	var cols = new Array();
+	var table = "";
+
+	table += "<TABLE width='100%'>";
+	table += "<CAPTION>" + title + "</CAPTION>";
+	table += "<TR>";
+	table += "<TD align=right nowrap>";
+	table += "</TD>";
+	table += "</TR>";
+	table += "</TABLE>";
+	table += "<TABLE border=1 cellpadding=5>";
+	table += "<TR>";
+
+	for (var key in data[0]) {
+		table += "<TD bgcolor=aqua>";
+		table += "<B>" + key + "</B>";
+		table += "</TD>";
+		cols.push(key);
+	}
+	table += "</TR>";
+
+	for (var index = 0; index < data.length; index++) {
+		var curr = data[index];
+		table += "<TR>";
+		for (var col_index = 0; col_index < cols.length; col_index++) {
+			var curr_col = cols[col_index];
+			table += "<TD>";
+			table += curr[curr_col];
+			table += "</TD>";
+		}
+		table += "</TR>";
+	}
+	table += "</TABLE>";
+	return table;
 }
 
 $("#auto_refresh_on").click(function() {
@@ -274,8 +317,8 @@ function send_ajax_wrapper(ajax_data, function_ptr) {
 	var my_data = send_ajax(ajax_data);
 	my_data
 		.done(function(data) {
-			console.log(ajax_data.command_name + " success");
-			console.log(data);
+			//console.log(ajax_data.command_name + " success");
+		  	//console.log(data);
 			if (function_ptr != "") {
 				window[function_ptr](data);
 			}
@@ -361,15 +404,15 @@ function view_attrs() {
 		attributes += "<b>" + key + "</b>" + ": " + selected_switch[key] + "<br>";
 	}
 
-	display_new_modal(get_modal_header(true) + "<p><code>" + attributes + "</code></p");
+	display_new_modal(get_modal_header(true) + "<p><code>" + attributes + "</code></p", selected_switch.ITN);
 }
 
 function view_log() {
-	display_new_modal(get_modal_header(true) + get_log_content(selected_switch['LOG_FILE_CONTENT']));
+	display_new_modal(get_modal_header(true) + get_log_content(selected_switch['LOG_FILE_CONTENT']), selected_switch.ITN);
 }
 
 function view_status_log() {
-	display_new_modal(get_modal_header(true) + get_log_content(selected_switch['STATUS_LOG_FILE_CONTENT']));
+	display_new_modal(get_modal_header(true) + get_log_content(selected_switch['STATUS_LOG_FILE_CONTENT']), selected_switch.ITN);
 }
 
 function open_default_modal() {
@@ -381,7 +424,7 @@ function open_default_modal() {
 	modal_content += "<p onclick='view_log()' style='cursor: pointer;'><code>View Log</code></p>";
 	modal_content += "<p onclick='view_status_log()' style='cursor: pointer;'><code>View Status Log</code></p>";
 	modal_content += "<p onclick='purge()' style='cursor: pointer;'><code>Purge</code></p>";
-	display_new_modal(modal_content);
+	display_new_modal(modal_content, selected_switch.ITN);
 }
 
 function purge() {
@@ -415,6 +458,7 @@ function get_log_content(content) {
 		log_content += "</TR>";
 		log_content += "</TABLE>";
 		log_content += "<TABLE border=1 cellpadding=5>";
+		// FIXME: remove hard-coded log file title, replace with actual title from server
 		log_content += "<TR><TD bgcolor=aqua><B>/opt/app/d1fnc1c1/eleat2/data/provision/schedTmp/provTmp:300000:8265572040:wa1il01isc::::ACTIVATION:25027";
 		log_content += "</B></TD></TR>";
 		log_content += "<TR><TD><PRE>";
@@ -439,7 +483,7 @@ function get_modal_header(display_back) {
 	return modal_content;
 }
 
-function display_new_modal(modal_content) {
+function display_new_modal(modal_content, modal_title) {
 	$("#dialog").dialog({
 		autoOpen: false,
 		show: {
@@ -450,7 +494,7 @@ function display_new_modal(modal_content) {
 			effect: "drop",
 			duration: 1000
 		},
-		title: selected_switch.ITN,
+		title: modal_title,
 		width: 500
 	});
 	$("#dialog").html(modal_content);
@@ -591,30 +635,37 @@ function update_start_date() {
 	$('#start_date').val(prepend_zero_to_time(end_date.getMonth() + 1) + '/' + prepend_zero_to_time(end_date.getDate()) + '/' + end_date.getFullYear());
 }
 
-function update_node_IDs() {
+function update_node_names() {
 	var selected_node_groups = $('#node_groups').val();
-	$('#node_IDs').html("");
 	$('#node_names').html("");
+	$('#node_IDs').html("");
 	for (var index in selected_node_groups) {
 		var curr_node_group = selected_node_groups[index];
 		var node_IDs = final_node_groups[curr_node_group];
 		node_IDs.sort();
 		for (var node_ID_index in node_IDs) {
 			var node_ID = node_IDs[node_ID_index];
-				$('#node_IDs')
-					.append($('<option>', { node_ID : node_ID })
-					.text(node_ID));
+			var node_name = final_node_config[node_ID]['NODENAME'];
+				$('#node_names')
+					.append($('<option>', { node_name : node_name })
+					.text(node_name));
 		}
 	}
 }
 
 function update_node_info() {
-	var selected_node_IDs = $('#node_IDs').val();
-	$('#node_names').html("");
+	var selected_node_names = $('#node_names').val();
+	$('#node_IDs').html("");
 	$('#AF_name').val("");
-	for (var index in selected_node_IDs) {
-		var selected_node_ID = selected_node_IDs[index];
-		var node_name = final_node_config[selected_node_ID]['NODENAME'];
+	for (var index in selected_node_names) {
+		var selected_node_name = selected_node_names[index];
+		var selected_node_ID;
+		for (var key in final_node_config) {
+			if (final_node_config[key]['NODENAME'] == selected_node_name) {
+				selected_node_ID = key;
+				break;
+			}
+		}
 		var AF_name = final_node_config[selected_node_ID]['CLLI'];
 		var comma = "";
 		var current_AF_name = $('#AF_name').val();
@@ -622,9 +673,9 @@ function update_node_info() {
 			comma = ", ";
 		}
 		$('#AF_name').val(current_AF_name + comma + AF_name);
-		$('#node_names')
-			.append($('<option>', { node_name : node_name })
-			.text(node_name));
+		$('#node_IDs')
+			.append($('<option>', { selected_node_ID : selected_node_ID })
+			.text(selected_node_ID));
 	}
 }
 
